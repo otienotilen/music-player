@@ -2,28 +2,48 @@ package com.example.myapplication;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gauravk.audiovisualizer.visualizer.BarVisualizer;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class PlayerActivity extends AppCompatActivity {
+     private RelativeLayout prl;
+     private SpeechRecognizer speechRecognizer;
+     private Intent speechRecognizerIntent;
+     private String keeper = "";
+
+
+
     Button btnplay, btnnext, btnprev, btnff, btnfr;
     TextView txtsname, txtsstart, txtsstop;
     SeekBar seekmusic;
@@ -31,11 +51,25 @@ public class PlayerActivity extends AppCompatActivity {
     String sname;
     ImageView imageView;
 
+
     public static final String EXTRA_NAME = "song_name";
     static MediaPlayer mediaPlayer;
     int position;
     ArrayList<File> mySongs;
     Thread updateseekbar;
+
+    private void checkVoiceCommandPermission()
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            if (!(ContextCompat.checkSelfPermission(PlayerActivity.this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED))
+            {
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + getPackageName()));
+                startActivity(intent);
+                finish();
+            }
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -54,16 +88,94 @@ public class PlayerActivity extends AppCompatActivity {
         }
         super.onDestroy();
     }
-
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
 
+
         getSupportActionBar().setTitle("Now Playing");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        checkVoiceCommandPermission();
+        //prl = findViewById(R.id.parentRelativeLayout);
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(PlayerActivity.this);
+        speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
 
+        speechRecognizer.setRecognitionListener(new RecognitionListener() {
+            @Override
+            public void onReadyForSpeech(Bundle params) {
+
+            }
+
+            @Override
+            public void onBeginningOfSpeech() {
+
+            }
+
+            @Override
+            public void onRmsChanged(float rmsdB) {
+
+            }
+
+            @Override
+            public void onBufferReceived(byte[] buffer) {
+
+            }
+
+            @Override
+            public void onEndOfSpeech() {
+
+            }
+
+            @Override
+            public void onError(int error) {
+
+            }
+
+            @Override
+            public void onResults(Bundle results)
+            {
+              ArrayList<String> matchesFound = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+              if (matchesFound != null)
+              {
+                  keeper = matchesFound.get(0);
+                  Toast.makeText(PlayerActivity.this, "Result = " + keeper, Toast.LENGTH_LONG).show();
+              }
+            }
+
+            @Override
+            public void onPartialResults(Bundle partialResults) {
+
+            }
+
+            @Override
+            public void onEvent(int eventType, Bundle params) {
+
+            }
+        });
+
+        //prl.setOnTouchListener(new View.OnTouchListener() {
+         //   @Override
+           // public boolean onTouch(View v, MotionEvent event) {
+
+               // switch (event.getAction())
+             //   {
+                  //  case MotionEvent.ACTION_DOWN:
+                     //   speechRecognizer.startListening(speechRecognizerIntent);
+                    //    keeper = "";
+                    //    break;
+
+                 //   case MotionEvent.ACTION_UP:
+                   //     speechRecognizer.stopListening();
+                  //      break;
+            //    }
+            //    return false;
+         //   }
+      //  });
         btnprev = findViewById(R.id.btnprev);
         btnnext = findViewById(R.id.btnnext);
         btnplay = findViewById(R.id.playbtn);
@@ -76,7 +188,6 @@ public class PlayerActivity extends AppCompatActivity {
         visualizer = findViewById(R.id.blast);
         imageView = findViewById(R.id.imageview);
 
-
         if (mediaPlayer != null )
         {
             mediaPlayer.stop();
@@ -85,13 +196,13 @@ public class PlayerActivity extends AppCompatActivity {
 
         Intent i = getIntent();
         Bundle bundle = i.getExtras();
-
         mySongs = (ArrayList) bundle.getParcelableArrayList("songs");
         String songName = i.getStringExtra("songname");
         position = bundle.getInt("pos",0);
         txtsname.setSelected(true);
         Uri uri = Uri.parse(mySongs.get(position).toString());
         sname = mySongs.get(position).getName();
+
         txtsname.setText(sname);
 
         mediaPlayer = MediaPlayer.create(getApplicationContext(), uri);

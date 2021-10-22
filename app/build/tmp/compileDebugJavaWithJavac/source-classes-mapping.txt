@@ -1,0 +1,38 @@
+com/example/myapplication/PlayerActivity.java
+ com.example.myapplication.PlayerActivity
+ com.example.myapplication.PlayerActivity$1
+ com.example.myapplication.PlayerActivity$10
+ com.example.myapplication.PlayerActivity$2
+ com.example.myapplication.PlayerActivity$3
+ com.example.myapplication.PlayerActivity$4
+ com.example.myapplication.PlayerActivity$5
+ com.example.myapplication.PlayerActivity$6
+ com.example.myapplication.PlayerActivity$7
+ com.example.myapplication.PlayerActivity$8
+ com.example.myapplication.PlayerActivity$9
+com/example/myapplication/BuildConfig.java
+ com.example.myapplication.BuildConfig
+com/example/myapplication/MainActivity.java
+ com.example.myapplication.MainActivity
+ com.example.myapplication.MainActivity$1
+ com.example.myapplication.MainActivity$2
+ com.example.myapplication.MainActivity$3
+ com.example.myapplication.MainActivity$4
+ com.example.myapplication.MainActivity$CustomAdapter
+com/example/myapplication/LoginActivity.java
+ com.example.myapplication.LoginActivity
+ com.example.myapplication.LoginActivity$1
+ com.example.myapplication.LoginActivity$2
+ com.example.myapplication.LoginActivity$3
+ com.example.myapplication.LoginActivity$4
+ com.example.myapplication.LoginActivity$5
+ com.example.myapplication.LoginActivity$6
+ com.example.myapplication.LoginActivity$7
+ com.example.myapplication.LoginActivity$8
+ com.example.myapplication.LoginActivity$9
+com/example/myapplication/SplashScreen.java
+ com.example.myapplication.SplashScreen
+ com.example.myapplication.SplashScreen$1
+com/example/myapplication/Stream.java
+ com.example.myapplication.Stream
+ com.example.myapplication.Stream$1

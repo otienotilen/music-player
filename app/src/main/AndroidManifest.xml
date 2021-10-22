@@ -3,23 +3,28 @@
     package="com.example.myapplication">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="Music_Player"
+        android:label="AI Music"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
-        <activity android:name=".PlayerActivity"></activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".VoiceCommandActivity"></activity>
+        <activity android:name=".SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Stream" />
+        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".PlayerActivity" />
+        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>
